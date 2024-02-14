@@ -22,16 +22,36 @@ class AsyncTest {
       new Ceo("ceo_3", "Bill")
   );
 
+  //finds the Ceo when Ceo_id passed as input
   public static CompletableFuture<Option<Ceo>> getCeoById(String ceo_id) {
-    return null;
+
+    return CompletableFuture.supplyAsync(() -> {
+      Option<Ceo> ceoOption = ceos.find(ceo -> ceo.getId().equals(ceo_id));
+      return ceoOption;
+    });
+
+
+  }
+  //finds the Enterprise of the Ceo when passed Ceo_id as input
+  public static CompletableFuture<Option<Enterprise>> getEnterpriseByCeoId(String ceo_id)
+  {
+    return CompletableFuture.supplyAsync(() -> {
+      Option<Enterprise> enterpriseOption = enterprises.find(enterprise -> enterprise.getCeoId().equals(ceo_id));
+      return enterpriseOption;
+    });
+
   }
 
-  public static CompletableFuture<Option<Enterprise>> getEnterpriseByCeoId(String ceo_id) {
-    return null;
-  }
 
   public static CompletableFuture<Tuple2<Option<Ceo>, Option<Enterprise>>> getCEOAndEnterprise(String ceo_id) {
-    return null;
+    CompletableFuture<Option<Ceo>> ceoFuture = getCeoById(ceo_id);
+    CompletableFuture<Option<Enterprise>> enterpriseFuture = getEnterpriseByCeoId(ceo_id);
+
+    //combines and returns the output from above 2 functions in the type Tuple
+    return ceoFuture.thenCombine(enterpriseFuture, Tuple2::new);
   }
+
+
+
 
 }

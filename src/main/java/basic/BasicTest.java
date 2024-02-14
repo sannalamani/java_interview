@@ -12,6 +12,23 @@ public class BasicTest {
    * alse return None in case of errors
    */
   public static Option<Integer> power(Integer i, Integer n) {
-    return Option.none();
+
+    //returns None if exponent(n) is less than 0 or larger value
+    if (n < 0 || n > 99999) {
+      return Option.none();
+    }
+
+    //while loop to calculate power of integer(i)
+    int result = 1;
+    try {
+      while (n > 0) {
+        result *= i;
+        n--;
+      }
+    }catch (ArithmeticException e) {
+      return Option.none();
+    }
+    return Option.of(result);
+
   }
 }
